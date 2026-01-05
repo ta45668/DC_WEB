@@ -7,6 +7,24 @@
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
+  <!-- 🔥 CORS解決方案 - 加在這裡 -->
+    <script>
+    (function() {
+        // 攔截所有XMLHttpRequest，針對GAS網址特殊處理
+        var originalOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function(method, url) {
+            if (url && url.includes('script.google.com')) {
+                // 避免觸發CORS預檢請求
+                this.withCredentials = false;
+                var originalSetRequestHeader = this.setRequestHeader;
+                this.setRequestHeader = function() {
+                    // 攔截Content-Type等會觸發預檢的header
+                };
+            }
+            return originalOpen.apply(this, arguments);
+        };
+    })();
+    </script>
   <body>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=1280 height=720 tabindex="-1"></canvas>
